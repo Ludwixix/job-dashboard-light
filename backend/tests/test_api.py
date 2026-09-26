@@ -21,9 +21,12 @@ def test_health_check_endpoint():
     assert "storage" in data
 
 
-def test_spa_fallback_dev_mode():
-    """Verify that SPA fallback returns 200 JSON message in dev mode."""
+def test_spa_fallback():
+    """Verify that SPA fallback returns 200 (HTML in production/built static or JSON fallback in bare dev)."""
     response = client.get("/dashboard")
     assert response.status_code == 200
-    data = response.json()
-    assert data["status"] == "running"
+    if response.headers.get("content-type", "").startswith("text/html"):
+        assert "<div id=\"root\"></div>" in response.text or "<!DOCTYPE html>" in response.text
+    else:
+        data = response.json()
+        assert data["status"] == "running"

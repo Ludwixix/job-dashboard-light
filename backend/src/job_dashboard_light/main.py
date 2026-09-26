@@ -14,8 +14,12 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import settings
 from .database import checkpoint_wal, get_db_connection, init_db
+from .routes.auth import router as auth_router
+from .routes.jobs import router as jobs_router
 from .routes.profile import router as profile_router
+from .routes.scrape import router as scrape_router
 from .routes.studio import router as studio_router
+from .routes.tracker import router as tracker_router
 from .services.expiry import run_hybrid_expiry_check
 from .services.storage import get_storage_service
 
@@ -81,8 +85,12 @@ async def health_check():
 
 
 # Mount REST API routers
+app.include_router(auth_router)
+app.include_router(jobs_router)
+app.include_router(scrape_router)
 app.include_router(profile_router)
 app.include_router(studio_router)
+app.include_router(tracker_router)
 
 
 # Expiry lifecycle triggers
