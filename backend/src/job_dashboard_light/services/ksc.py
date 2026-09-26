@@ -328,7 +328,7 @@ def map_ksc_to_capability_framework(
     criterion: str, framework: str = "APS"
 ) -> dict[str, Any]:
     """Maps a criterion text to the APS Integrated Leadership System or VPSC Capability Framework."""
-    crit_lower = criterion.lower()
+    crit_lower = (criterion or "").lower()
     fw_upper = (framework or "APS").strip().upper()
 
     best_pillar = "TECHNICAL_EXPERTISE"
@@ -761,3 +761,8 @@ def generate_ksc_report(
         solutions=solutions,
         master_document=master_doc,
     )
+
+
+# Backward compatibility alias
+generate_ksc_statements = generate_ksc_report
+

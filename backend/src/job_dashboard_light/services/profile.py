@@ -312,7 +312,7 @@ def extract_text_from_txt(txt_bytes: bytes) -> str:
     """Extract text from plain text or markdown bytes with encoding detection."""
     if not txt_bytes:
         return ""
-    for enc in ("utf-8", "utf-8-sig", "latin-1", "cp1252", "iso-8859-1"):
+    for enc in ("utf-8-sig", "utf-8", "latin-1", "cp1252", "iso-8859-1"):
         try:
             return txt_bytes.decode(enc)
         except UnicodeDecodeError:

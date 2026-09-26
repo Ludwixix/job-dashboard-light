@@ -58,24 +58,26 @@ def run_hybrid_expiry_check(
         cols = {row[1] for row in table_info}
         has_is_expired = "is_expired" in cols
         has_status = "status" in cols
+        has_updated_at = "updated_at" in cols
 
         # Helper to mark a list of job IDs as expired
         def mark_jobs_expired(job_ids: list[str]) -> None:
             if not job_ids:
                 return
             placeholders = ",".join("?" for _ in job_ids)
-            if has_is_expired and has_status:
-                sql = f"UPDATE jobs SET status = 'expired', is_expired = 1, updated_at = ? WHERE id IN ({placeholders})"
-                params = [now_iso] + job_ids
-                cur.execute(sql, params)
-            elif has_is_expired:
-                sql = f"UPDATE jobs SET is_expired = 1, updated_at = ? WHERE id IN ({placeholders})"
-                params = [now_iso] + job_ids
-                cur.execute(sql, params)
-            else:
-                sql = f"UPDATE jobs SET status = 'expired', updated_at = ? WHERE id IN ({placeholders})"
-                params = [now_iso] + job_ids
-                cur.execute(sql, params)
+            set_clauses: list[str] = []
+            if has_status:
+                set_clauses.append("status = 'expired'")
+            if has_is_expired:
+                set_clauses.append("is_expired = 1")
+            if not set_clauses:
+                set_clauses.append("status = 'expired'")
+            if has_updated_at:
+                set_clauses.append("updated_at = ?")
+
+            sql = f"UPDATE jobs SET {', '.join(set_clauses)} WHERE id IN ({placeholders})"
+            params = ([now_iso] if has_updated_at else []) + job_ids
+            cur.execute(sql, params)
 
         # ----------------------------------------------------------------------
         # Tier 1: Explicit Closing Date Expiry

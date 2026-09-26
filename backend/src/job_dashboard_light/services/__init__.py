@@ -7,6 +7,7 @@ from .export import export_markdown, export_pdf_bytes, sanitize_filename
 from .ksc import (
     extract_ksc_from_jd,
     generate_ksc_report,
+    generate_ksc_statements,
     generate_star_statement,
     map_ksc_to_capability_framework,
 )
@@ -38,7 +39,7 @@ from .profile import (
 )
 from .salary import normalize_australian_salary
 from .storage import StorageService, get_storage_service
-from .verifier import clear_verify_cache, verify_job_url, verify_job_urls
+from .verifier import batch_verify_urls, clear_verify_cache, verify_job_url, verify_job_urls
 
 __all__ = [
     "StorageService",
@@ -63,6 +64,7 @@ __all__ = [
     "generate_tailored_cv",
     "generate_polarized_cover_letter",
     "generate_ksc_report",
+    "generate_ksc_statements",
     "generate_star_statement",
     "map_ksc_to_capability_framework",
     "extract_ksc_from_jd",
@@ -71,6 +73,7 @@ __all__ = [
     "sanitize_filename",
     "verify_job_url",
     "verify_job_urls",
+    "batch_verify_urls",
     "clear_verify_cache",
     "run_hybrid_expiry_check",
     "extract_text_from_file",
