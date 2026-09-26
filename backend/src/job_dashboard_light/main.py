@@ -13,7 +13,10 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import settings
-from .database import checkpoint_wal, init_db
+from .database import checkpoint_wal, get_db_connection, init_db
+from .routes.profile import router as profile_router
+from .routes.studio import router as studio_router
+from .services.expiry import run_hybrid_expiry_check
 from .services.storage import get_storage_service
 
 logger = logging.getLogger("job_dashboard_light.main")
@@ -75,6 +78,21 @@ async def health_check():
             "local_db_size_bytes": status.local_db_size_bytes,
         },
     }
+
+
+# Mount REST API routers
+app.include_router(profile_router)
+app.include_router(studio_router)
+
+
+# Expiry lifecycle triggers
+@app.post("/api/jobs/verify-expiry")
+@app.post("/api/admin/expiry/run")
+async def verify_expiry_endpoint():
+    """Trigger hybrid expiry lifecycle worker across database postings."""
+    db_file = settings.DATA_DIR / "jobs.sqlite3"
+    with get_db_connection(db_file) as conn:
+        return run_hybrid_expiry_check(conn)
 
 
 # Static file serving & SPA fallback
