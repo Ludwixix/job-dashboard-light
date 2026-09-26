@@ -1,0 +1,116 @@
+# ==============================================================================
+# Security & Secret Exposure Protection (Zero Secret Exposure Policy)
+# ==============================================================================
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.cert
+*.crt
+client_secret*.json
+credentials/
+secrets/
+*token*
+*credential*
+*.secret
+OpenRouterAPI.txt
+KEYS.md
+
+# ==============================================================================
+# Database & Persistent Storage (Local runtime only - never commit databases)
+# ==============================================================================
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/
+backend/data/
+
+# ==============================================================================
+# Python & Bytecode
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+
+# ==============================================================================
+# Node & Frontend Build Artifacts
+# ==============================================================================
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ==============================================================================
+# Static Build Output in Backend (compiled bundle from frontend)
+# ==============================================================================
+backend/src/job_dashboard_light/static/assets/
+backend/src/job_dashboard_light/static/index.html
+backend/static/assets/
+backend/static/index.html
+
+# ==============================================================================
+# Operating System & Editor Artifacts
+# ==============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ==============================================================================
+# Resumes, Uploads & Personal Candidate Assets
+# ==============================================================================
+*Candidate*.pdf
+*Resume*.pdf
+*CV*.pdf
+uploads/
+backend/uploads/
+
+# ==============================================================================
+# Local Agent Teamwork Metadata (if created locally)
+# ==============================================================================
+.agents/teamwork/
