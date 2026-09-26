@@ -25,18 +25,27 @@ from .models import FTS_DDL, SCHEMA_DDL, TRIGGERS_DDL
 
 logger = logging.getLogger("job_dashboard_light.database")
 
-# Default database location inside project data directory
-DEFAULT_DB_PATH = Path(
-    os.getenv(
-        "JOB_DASHBOARD_DB_PATH",
-        str(Path(__file__).parent.parent.parent / "data" / "jobs.sqlite3"),
-    )
-)
+
+def get_default_db_path() -> Path:
+    """Resolve default database path dynamically respecting JOB_DASHBOARD_DATA_DIR and JOB_DASHBOARD_DB_PATH."""
+    if os.getenv("JOB_DASHBOARD_DB_PATH"):
+        return Path(os.getenv("JOB_DASHBOARD_DB_PATH"))
+    if os.getenv("JOB_DASHBOARD_DATA_DIR"):
+        return Path(os.getenv("JOB_DASHBOARD_DATA_DIR")) / "jobs.sqlite3"
+    return Path(__file__).resolve().parent.parent.parent / "data" / "jobs.sqlite3"
+
+
+DEFAULT_DB_PATH = get_default_db_path()
 
 
 def get_db_path(custom_path: Optional[str | Path] = None) -> Path:
     """Resolve database path, ensuring parent directory exists."""
-    path = Path(custom_path) if custom_path else DEFAULT_DB_PATH
+    if custom_path:
+        path = Path(custom_path)
+    elif os.getenv("JOB_DASHBOARD_DATA_DIR") or os.getenv("JOB_DASHBOARD_DB_PATH"):
+        path = get_default_db_path()
+    else:
+        path = DEFAULT_DB_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
     return path
 
